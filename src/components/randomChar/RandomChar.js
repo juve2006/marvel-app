@@ -8,11 +8,6 @@ import mjolnir from '../../resources/img/mjolnir.png';
 import MarvelService from '../../services/MarvelService';
 
 export default class RandomChar extends Component {
-    constructor(props) {
-        super(props);
-        this.updateCharacter();
-    }
-
     state = {
         char: {},
         loading: true,
@@ -20,6 +15,15 @@ export default class RandomChar extends Component {
     }
 
     marvelService = new MarvelService();
+
+    componentDidMount() {
+        this.updateCharacter();
+        this.interval = setInterval(this.updateCharacter, 10000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
 
     onCharLoaded = (char) => {
         this.setState({
