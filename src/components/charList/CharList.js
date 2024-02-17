@@ -45,13 +45,18 @@ export default class CharList extends Component {
 
 
       return (
-          <li className="char__item" key={item.id}>
-              <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
+          <li className="char__item"
+              key={item.id}
+              onClick={()=>this.props.onCharSelected(item.id)}>
+              <img src={item.thumbnail}
+                   alt={item.name}
+                   style={imgStyle}
+              />
               <div className="char__name">{item.name}</div>
           </li>
       )
     });
-    console.log(items)
+
     return (
         <ul className="char__grid">
           {items}
@@ -62,11 +67,9 @@ export default class CharList extends Component {
   render() {
     const {chars, loading, error} = this.state;
 
-
     const errorMsg = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
     const items = this.renderItems(chars);
-    console.log(items)
     const content = !(loading || error) ? items : null;
 
 
