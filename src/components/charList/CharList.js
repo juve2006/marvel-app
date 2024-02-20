@@ -6,26 +6,49 @@ import ErrorMessage from '../errorMsg/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 
 export default class CharList extends Component {
+
   state = {
     chars: [],
     loading: true,
-    error: false
+    error: false,
+    newItemLoading: false,
+    offset: 210,
+    charEnded: false
   }
 
   marvelService = new MarvelService();
 
   componentDidMount() {
-    this.marvelService.getAllCharacters()
+    this.onRequest();
+  }
+
+  onRequest = (offset) => {
+    this.onCharsLoading();
+    this.marvelService.getAllCharacters(offset)
         .then(this.onCharsLoaded)
         .catch(this.onError)
   }
 
-
-  onCharsLoaded = (chars) => {
+  onCharsLoading = () => {
     this.setState({
-      chars,
-      loading: false
+      newItemLoading: true
     })
+  }
+
+  onCharsLoaded = (newChars) => {
+    let ended = false;
+
+    if (newChars.length < 9) {
+      ended = true;
+    }
+
+    this.setState(({chars, offset}) => ({
+      chars: [...chars,...newChars],
+      loading: false,
+      newItemLoading: false,
+      offset: offset + 9,
+      charEnded: ended
+    }))
   }
 
   onError = () => {
@@ -65,7 +88,7 @@ export default class CharList extends Component {
   }
 
   render() {
-    const {chars, loading, error} = this.state;
+    const { chars, loading, error, newItemLoading, offset, charEnded } = this.state;
 
     const errorMsg = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
@@ -78,7 +101,12 @@ export default class CharList extends Component {
             {errorMsg}
             {spinner}
             {content}
-            <button className="button button__main button__long">
+            <button
+                className="button button__main button__long"
+                disabled={newItemLoading}
+                style={{display: charEnded ? 'none' : 'block'}}
+                onClick={() => this.onRequest(offset)}
+            >
               <div className="inner">load more</div>
             </button>
           </div>
