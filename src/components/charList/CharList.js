@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import './charList.scss';
 import MarvelService from '../../services/MarvelService';
@@ -113,3 +114,7 @@ export default class CharList extends Component {
       )
   }
 }
+
+CharList.propTypes = {
+  onCharSelected: PropTypes.func.isRequired
+};
