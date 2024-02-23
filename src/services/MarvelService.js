@@ -1,41 +1,33 @@
+import useHttp from '../hooks/http.hook';
 
-class MarvelService {
-    _apiBase = 'https://gateway.marvel.com:443/v1/public';
-    _apiKey = 'f2d8c225a12cbfea5b5c875a30325e37';
-    _baseOffset = 210;
+export default function useMarvelService() {
+    const {loading, request, error, clearError} = useHttp();
 
-    getResource = async (url) => {
-        let res = await fetch(url);
+    const _apiBase = 'https://gateway.marvel.com:443/v1/public';
+    const _apiKey = 'f2d8c225a12cbfea5b5c875a30325e37';
+    const _baseOffset = 210;
 
-        if (!res.ok) {
-            throw new Error(`Couldn't fetch ${url}, status: ${res.status}`);
-        }
-
-        return res.json();
-    };
-
-    getAllCharacters = async (offset = this._baseOffset) => {
-        const res = await this.getResource(`${this._apiBase}/characters?limit=9&offset=${offset}&apikey=${this._apiKey}`);
-        return res.data.results.map(char => this._transformCharacter(char));
+    const getAllCharacters = async (offset = _baseOffset) => {
+        const res = await request(`${_apiBase}/characters?limit=9&offset=${offset}&apikey=${_apiKey}`);
+        return res.data.results.map(char => _transformCharacter(char));
     }
 
-    getCharacter = async (id) => {
-        const res = await this.getResource(`${this._apiBase}/characters/${id}?apikey=${this._apiKey}`);
-        return this._transformCharacter(res.data.results[0]);
+    const getCharacter = async (id) => {
+        const res = await request(`${_apiBase}/characters/${id}?apikey=${_apiKey}`);
+        return _transformCharacter(res.data.results[0]);
     }
 
-    _transformCharacter = (char) => {
+    const _transformCharacter = (char) => {
         return {
-          id: char.id,
-          name: char.name,
-          description: char.description ? `${char.description.slice(0, 210)}...` : 'There is no description for this character',
-          thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
-          homepage: char.urls[0].url,
-          wiki: char.urls[1].url,
-          comics: char.comics.items
+            id: char.id,
+            name: char.name,
+            description: char.description ? `${char.description.slice(0, 210)}...` : 'There is no description for this character',
+            thumbnail: char.thumbnail.path + '.' + char.thumbnail.extension,
+            homepage: char.urls[0].url,
+            wiki: char.urls[1].url,
+            comics: char.comics.items
         }
     }
 
+    return {loading, error, clearError, getCharacter, getAllCharacters};
 }
-
-export default MarvelService;
