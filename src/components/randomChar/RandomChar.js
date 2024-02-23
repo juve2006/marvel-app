@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import {useEffect, useState} from 'react';
 
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMsg/ErrorMessage';
@@ -7,80 +7,66 @@ import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 import MarvelService from '../../services/MarvelService';
 
-export default class RandomChar extends Component {
-    state = {
-        char: {},
-        loading: true,
-        error: false
+export default function RandomChar() {
+    const [char, setChar] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+
+    const marvelService = new MarvelService();
+
+    useEffect(() => {
+        updateCharacter();
+        const interval = setInterval(updateCharacter, 10000);
+        return () => clearInterval(interval);
+    }, []);
+
+    function onCharLoaded(char) {
+        setChar(char);
+        setLoading(false);
     }
 
-    marvelService = new MarvelService();
-
-    componentDidMount() {
-        this.updateCharacter();
-        this.interval = setInterval(this.updateCharacter, 10000);
+    function onCharLoading() {
+        setLoading(true);
     }
 
-    componentWillUnmount() {
-        clearInterval(this.interval);
+    function onError() {
+        setLoading(false);
+        setError(true);
     }
 
-    onCharLoaded = (char) => {
-        this.setState({
-            char,
-            loading: false
-        })
-    }
-
-    onCharLoading = () => {
-      this.setState({
-        loading: true
-      })
-    }
-
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true
-        })
-    }
-
-    updateCharacter = () => {
+    function updateCharacter() {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        this.onCharLoading();
-        this.marvelService
+        onCharLoading();
+        marvelService
             .getCharacter(id)
-            .then(this.onCharLoaded)
-            .catch(this.onError)
+            .then(onCharLoaded)
+            .catch(onError)
     }
 
-    render() {
-        const {char, loading, error} = this.state;
-        const errorMsg = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !(error || loading) ? <View char={char}/> : null;
+    const errorMsg = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(error || loading) ? <View char={char}/> : null;
 
-        return (
-            <div className="randomchar">
-                {errorMsg}
-                {spinner}
-                {content}
-                <div className="randomchar__static">
-                    <p className="randomchar__title">
-                        Random character for today!<br/>
-                        Do you want to get to know him better?
-                    </p>
-                    <p className="randomchar__title">
-                        Or choose another one
-                    </p>
-                    <button className="button button__main" onClick={this.updateCharacter}>
-                        <div className="inner">try it</div>
-                    </button>
-                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
-                </div>
+    return (
+        <div className="randomchar">
+            {errorMsg}
+            {spinner}
+            {content}
+            <div className="randomchar__static">
+                <p className="randomchar__title">
+                    Random character for today!<br/>
+                    Do you want to get to know him better?
+                </p>
+                <p className="randomchar__title">
+                    Or choose another one
+                </p>
+                <button className="button button__main" onClick={updateCharacter}>
+                    <div className="inner">try it</div>
+                </button>
+                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 function View ({char}) {
