@@ -1,4 +1,6 @@
 import useHttp from '../hooks/http.hook';
+import {logDOM} from "@testing-library/react";
+import {unmountComponentAtNode} from "react-dom";
 
 export default function useMarvelService() {
     const {loading, request, error, clearError} = useHttp();
@@ -17,6 +19,11 @@ export default function useMarvelService() {
         return _transformCharacter(res.data.results[0]);
     }
 
+    const getAllComics = async (offset=0) => {
+        const res = await request(`${_apiBase}/comics?limit=8&offset=${offset}&apikey=${_apiKey}`);
+        return res.data.results.map(comics => _transformComics(comics));
+    }
+
     const _transformCharacter = (char) => {
         return {
             id: char.id,
@@ -29,5 +36,16 @@ export default function useMarvelService() {
         }
     }
 
-    return {loading, error, clearError, getCharacter, getAllCharacters};
+    const _transformComics = (comics) => {
+        return {
+            id: comics.id,
+            thumbnail: comics.thumbnail.path + '.' + comics.thumbnail.extension,
+            price: comics.prices[0].price
+                ? `${comics.prices[0].price}$`
+                : "not available",
+            title: comics.title,
+        }
+    }
+
+    return {loading, error, clearError, getCharacter, getAllCharacters, getAllComics};
 }

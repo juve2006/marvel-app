@@ -7,7 +7,7 @@ import ErrorMessage from '../errorMsg/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 
 export default function CharList(props) {
-  const [chars, setChars] = useState([]);
+    const [chars, setChars] = useState([]);
     const [newItemLoading, setNewItemLoading] = useState(false);
     const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnded] = useState(false);
@@ -20,8 +20,7 @@ export default function CharList(props) {
 
     function onRequest(offset, initial) {
         initial ? setNewItemLoading(false) : setNewItemLoading(true);
-        getAllCharacters(offset)
-            .then(onCharsLoaded)
+        getAllCharacters(offset).then(onCharsLoaded)
     }
 
     function onCharsLoaded(newChars) {
@@ -31,17 +30,17 @@ export default function CharList(props) {
         }
 
         setChars(chars => [...chars, ...newChars]);
-    setNewItemLoading(false);
-    setOffset(offset => offset + 9);
-    setCharEnded(ended);
-  }
+        setNewItemLoading(false);
+        setOffset(offset => offset + 9);
+        setCharEnded(ended);
+    }
 
   const itemRefs = useRef([]);
 
   function focusOnItem(id) {
-    itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
-    itemRefs.current[id].classList.add('char__item_selected');
-    itemRefs.current[id].focus();
+      itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
+      itemRefs.current[id].classList.add('char__item_selected');
+      itemRefs.current[id].focus();
   }
 
   function renderItems(arr) {
