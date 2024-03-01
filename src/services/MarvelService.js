@@ -1,6 +1,4 @@
 import useHttp from '../hooks/http.hook';
-import {logDOM} from "@testing-library/react";
-import {unmountComponentAtNode} from "react-dom";
 
 export default function useMarvelService() {
     const {loading, request, error, clearError} = useHttp();
@@ -42,7 +40,7 @@ export default function useMarvelService() {
             thumbnail: comics.thumbnail.path + '.' + comics.thumbnail.extension,
             price: comics.prices[0].price
                 ? `${comics.prices[0].price}$`
-                : "not available",
+                : 'not available',
             title: comics.title,
         }
     }
