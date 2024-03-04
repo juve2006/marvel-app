@@ -14,7 +14,7 @@ export default function RandomChar() {
 
     useEffect(() => {
         updateCharacter();
-        const interval = setInterval(updateCharacter, 10000);
+        const interval = setInterval(updateCharacter, 60000);
         return () => clearInterval(interval);
     }, []);
 

@@ -22,14 +22,14 @@ export default function ComicsList() {
         getAllComics(offset).then(onComicsLoaded);
     }
 
-    function onComicsLoaded(newComics) {
+    const onComicsLoaded = (newComicsList) => {
         let ended = false;
-        if (newComics.length < 8) {
+        if (newComicsList.length < 8) {
             ended = true;
         }
-        setComics(comics => [...comics, ...newComics]);
+        setComics([...comics, ...newComicsList]);
         setNewItemLoading(false);
-        setOffset(offset => offset + 8);
+        setOffset(offset + 8);
         setComicsEnded(ended);
     }
 

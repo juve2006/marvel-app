@@ -23,16 +23,16 @@ export default function CharList(props) {
         getAllCharacters(offset).then(onCharsLoaded)
     }
 
-    function onCharsLoaded(newChars) {
+    const onCharsLoaded = (newCharList) => {
         let ended = false;
-        if (newChars.length < 9) {
+        if (newCharList.length < 9) {
             ended = true;
         }
 
-        setChars(chars => [...chars, ...newChars]);
-        setNewItemLoading(false);
+        setChars(charList => [...chars, ...newCharList]);
+        setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
-        setCharEnded(ended);
+        setCharEnded(charEnded => ended);
     }
 
   const itemRefs = useRef([]);
