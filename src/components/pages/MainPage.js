@@ -8,26 +8,26 @@ import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 import decoration from '../../resources/img/vision.png';
 
 export default function MainPage() {
-  const [selectedChar, setSelectedChar] = useState(null);
+    const [selectedChar, setSelectedChar] = useState(null);
 
-  function onCharSelected(id) {
-    setSelectedChar(id);
-  }
+    function onCharSelected(id) {
+        setSelectedChar(id);
+    }
 
-  return (
-      <>
-        <ErrorBoundary>
-          <RandomChar/>
-        </ErrorBoundary>
-        <div className="char__content">
-          <ErrorBoundary>
-            <CharList onCharSelected={onCharSelected}/>
-          </ErrorBoundary>
-          <ErrorBoundary>
-            <CharInfo charId={selectedChar}/>
-          </ErrorBoundary>
-        </div>
-        <img className="bg-decoration" src={decoration} alt="vision"/>
-      </>
-  );
+    return (
+        <>
+            <ErrorBoundary>
+                <RandomChar/>
+            </ErrorBoundary>
+            <div className="char__content">
+                <ErrorBoundary>
+                    <CharList onCharSelected={onCharSelected}/>
+                </ErrorBoundary>
+                <ErrorBoundary>
+                    <CharInfo charId={selectedChar}/>
+                </ErrorBoundary>
+            </div>
+            <img className="bg-decoration" src={decoration} alt="vision"/>
+        </>
+    );
 }
