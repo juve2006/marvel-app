@@ -6,7 +6,7 @@ export default function Page404() {
         <div>
             <ErrorMessage/>
             <p style={{'textAlign': 'center', 'fontWeight': 'bold', 'fontSize': '24px'}}>Page doesn't exist</p>
-            <Link style={{'textAlign': 'center', 'fontWeight': 'bold', 'fontSize': '24px', 'display': 'block'}} to="/">Back
+            <Link to="/" style={{'textAlign': 'center', 'fontWeight': 'bold', 'fontSize': '24px', 'display': 'block'}} >Back
                 to main page</Link>
         </div>
     );
